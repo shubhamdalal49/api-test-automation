@@ -1,0 +1,38 @@
+name: API Automation CI
+
+on:
+  push:
+    branches: [ main, master ]      # adjust if your main branch is named differently
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'           # Change to 11 or other if your project requires
+          distribution: 'temurin'
+          cache: 'maven'               # Enable Maven dependency cache
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Run API Tests
+        run: mvn test
+
+      - name: Upload Cucumber/Extent HTML Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report
+          path: |
+            target/cucumber-reports.html
+            target/SparkReport/Spark.html
+            target/cucumber-html-reports/
