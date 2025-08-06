@@ -1,8 +1,65 @@
+# name: API Automation CI
+
+# on:
+#   push:
+#     branches: [ main, master ]      # adjust if your main branch is named differently
+#   pull_request:
+#     branches: [ main, master ]
+
+# jobs:
+#   build-and-test:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Set up JDK 17
+#         uses: actions/setup-java@v3
+#         with:
+#           java-version: '17'           # Change to 11 or other if your project requires
+#           distribution: 'temurin'
+#           cache: 'maven'               # Enable Maven dependency cache
+
+#       - name: Build with Maven
+#         run: mvn clean install
+
+#       # - name: Run API Tests
+#       #   run: mvn test
+
+#       - name: Upload Cucumber/Extent HTML Reports
+#         if: always()
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: html-report
+#           path: |
+#             target/cucumber-reports.html
+#             target/SparkReport/Spark.html
+#             target/cucumber-html-reports/
+
+#       - name: Send Email Report
+#         uses: dawidd6/action-send-mail@v6
+#         if: always()                      # Always runs—even if previous steps failed
+#         with:
+#           server_address: smtp.gmail.com
+#           server_port: 465
+#           username: ${{ secrets.MAIL_USERNAME }}
+#           password: ${{ secrets.MAIL_PASSWORD }}
+#           subject: "Build ${{ github.workflow }} in repo ${{ github.repository }} - Job ${{ github.job }} - ${{ job.status }}"
+#           to: "shubhamdalal0884@gmail.com"
+#           from: "Automation Bot shubhamdalal1997@gmail.com"
+#           body: "The automation test results are attached."
+#           attachments: |
+#             target/cucumber-reports.html
+#             target/SparkReport/Spark.html
+
+
+
 name: API Automation CI
 
 on:
   push:
-    branches: [ main, master ]      # adjust if your main branch is named differently
+    branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
 
@@ -17,22 +74,35 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'           # Change to 11 or other if your project requires
+          java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'               # Enable Maven dependency cache
+          cache: 'maven'
 
-      - name: Build with Maven
+      - name: Run Maven Build (includes tests)
         run: mvn clean install
 
-      - name: Run API Tests
-        run: mvn test
-
-      - name: Upload Cucumber/Extent HTML Reports
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: html-report
+          name: test-reports
           path: |
             target/cucumber-reports.html
             target/SparkReport/Spark.html
             target/cucumber-html-reports/
+
+      - name: Send Email Report
+        if: always()
+        uses: dawidd6/action-send-mail@v6
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Test Report - ${{ job.status }}"
+          to: shubhamdalal0884@gmail.com
+          from: "Automation Bot <${{ secrets.MAIL_USERNAME }}>"
+          body: "Automation test run is complete. Please check the attached report."
+          attachments: |
+            target/cucumber-reports.html
+            target/SparkReport/Spark.html
