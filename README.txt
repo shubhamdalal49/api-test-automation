@@ -1,7 +1,7 @@
 API Automation Project
 This is a sample API automation framework using Java, Maven, Rest Assured, TestNG, and Cucumber.
-It automates testing for APIs such as ReqRes.in, JSONPlaceholder, GoRest, and more.
-It is designed for simplicity, scalability, and easy onboarding of new team members.
+It automates testing for APIs such as ReqRes.in, JSONPlaceholder, GoRest.
+
 
 Features
 Java + Maven based, cross-platform.
@@ -40,6 +40,6 @@ api-automation-project/
 │           ├── log4j2.xml
 │           └── extent-config.xml
 ├── pom.xml
-└── README.txt or README.md
+└── README.txt
 
 
