@@ -63,6 +63,8 @@ on:
   pull_request:
     branches: [ main, master ]
 
+  workflow_dispatch:   # <-- This enables manual trigger!
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -106,3 +108,4 @@ jobs:
           attachments: |
             target/cucumber-reports.html
             target/SparkReport/Spark.html
+# ..
